@@ -1,5 +1,5 @@
 import streamlit as st
-import psycopg2
+
 from deta import Deta
 import pandas as pd
 
@@ -14,21 +14,21 @@ deta=Deta(DETA_KEY)
 db=deta.Base("clients")
 
 
-def insert_period(period, incomes, expenses, comment):
-    """Returns the report on a successful creation, otherwise raises an error"""
-    return db.put({"key": period, "incomes": incomes, "expenses": expenses, "comment": comment})
+# def insert_period(period, incomes, expenses, comment):
+#     """Returns the report on a successful creation, otherwise raises an error"""
+#     return db.put({"key": period, "incomes": incomes, "expenses": expenses, "comment": comment})
 
 
-def fetch_all_periods():
-    """Returns a dict of all periods"""
-    res = db.fetch()
-    periods = [re for re in res]
-    return periods
+# def fetch_all_periods():
+#     """Returns a dict of all periods"""
+#     res = db.fetch()
+#     periods = [re for re in res]
+#     return periods
 
 
-def get_period(period):
-    """If not found, the function will return None"""
-    return db.get(period)
+# def get_period(period):
+#     """If not found, the function will return None"""
+#     return db.get(period)
 
 #insert_period("feb", 2000, 3000, "no")
 
