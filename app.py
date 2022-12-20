@@ -32,11 +32,12 @@ db=deta.Base("clients")
 
 #insert_period("feb", 2000, 3000, "no")
 
-
-res = db.fetch()
-all_items = res.items
-df = pd.DataFrame(all_items)
-st.write(df['expenses'][0])
+st.subheader('Result')
+if st.button('push'):
+    res = db.fetch()
+    all_items = res.items
+    df = pd.DataFrame(all_items)
+    st.write(df['expenses'][0])
 
 
 
