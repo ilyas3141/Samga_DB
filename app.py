@@ -5,8 +5,8 @@ import pandas as pd
 
 
 
-DETA_KEY="a02njvwb_d9c6HV6N6AiVe9oDS4hqYUgQcUggWz2b"
-#DETA_KEY = st.secrets["DETA_KEY"]
+#DETA_KEY="a02njvwb_d9c6HV6N6AiVe9oDS4hqYUgQcUggWz2b"
+DETA_KEY = st.secrets["DETA_KEY"]
 
 deta=Deta(DETA_KEY)
 
