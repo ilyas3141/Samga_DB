@@ -13,10 +13,14 @@ deta=Deta(DETA_KEY)
 
 db=deta.Base("clients")
 
+name = st.text_area("", placeholder="Enter your first name here ...")
+last_name = st.text_area("", placeholder="Enter your last name here ...")
+email = st.text_area("", placeholder="Enter your email here ...")
 
-# def insert_period(period, incomes, expenses, comment):
-#     """Returns the report on a successful creation, otherwise raises an error"""
-#     return db.put({"key": period, "incomes": incomes, "expenses": expenses, "comment": comment})
+
+def insert_period(names, l_name, emails):
+    """Returns the report on a successful creation, otherwise raises an error"""
+    return db.put({"First Name": names, "Last Name": l_name, "Email address": emails})
 
 
 # def fetch_all_periods():
@@ -34,10 +38,11 @@ db=deta.Base("clients")
 
 st.subheader('Result')
 if st.button('push'):
+    insert_period(name,last_name,email)
     res = db.fetch()
     all_items = res.items
     df = pd.DataFrame(all_items)
-    st.write(df['expenses'][0])
+    st.write(df['First Name'][0])
 
 
 
