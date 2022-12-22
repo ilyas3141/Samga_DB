@@ -2,10 +2,10 @@ import streamlit as st
 
 from deta import Deta
 import pandas as pd
+import streamlit_authenticator as stauth  # pip install streamlit-authenticator
 
 
 
-#DETA_KEY="a02njvwb_d9c6HV6N6AiVe9oDS4hqYUgQcUggWz2b"
 DETA_KEY = st.secrets["DETA_KEY"]
 
 deta=Deta(DETA_KEY)
@@ -45,6 +45,131 @@ if st.button('push'):
     st.write(df['First Name'][0])
 
 
+
+
+def fetch_all_users():
+    """Returns a dict of all users"""
+    res = db1.fetch()
+    return res.items
+
+
+
+
+db1=deta.Base("admins")
+
+
+
+# users = fetch_all_users()
+
+# usernames = [user["username"] for user in users]
+# names = [user["First Name"] for user in users]
+# hashed_passwords = [user["password"] for user in users]
+
+# usernames=['ilyas3141','kymbat123','daniil456']
+# names=['Ilias','Kymbat','Daniil']
+# passwords=['ilyas3141','abc123','qwert456']
+# hashed_passwords=stauth.Hasher(passwords).generate()
+
+
+# credentials = {"usernames":{}}
+
+# for un, name, pw in zip(usernames, names, passwords):
+#     user_dict = {"name":name,"password":pw}
+#     credentials["usernames"].update({un:user_dict})
+
+
+# credentials = {
+#         "key":{
+#             "h84lu76ma34g":{
+#                 "First Name":"Ilias",
+#                 "password":"$2b$12$Fx29SffZvhhKHuGNtztaz.mndfT52s8q4fCbG5RJKyV7XV9W8pKW.",
+#                 "username": "ilyas3141"
+#                 },
+#             "n4h15bebbidj":{
+#                 "First Name":"Kymbat",
+#                 "password":"$2b$12$KSKtf7Vibssl5V.gG7V1d.6R8Flr8bqzIcG2RnmMlldBkYKrjJiPm",
+#                 "username": "kymbat123"
+#                 }            
+#             }
+#         }
+
+
+# names = ['John Smith', 'Rebecca Briggs']
+# usernames = ['jsmith', 'rbriggs']
+# passwords = ['123', '456']
+
+
+
+# credentials = {"usernames":{}}
+
+# for un, name, pw in zip(usernames, names, passwords):
+#     user_dict = {"name":name,"password":pw}
+#     credentials["usernames"].update({un:user_dict})
+
+# credentials={'usernames': {'daniil456': {'name': 'Daniil', 'password': 'ilyas3141'},
+#   'ilyas3141': {'name': 'Ilias', 'password': 'abc123'},
+#   'kymbat123': {'name': 'Kymbat', 'password': 'qwert456'}}}
+
+
+
+
+#WORKING CODE FOR LOGIN
+
+# users=fetch_all_users()
+
+# usernames = [user["key"] for user in users]
+# names = [user["name"] for user in users]
+# hashed_passwords = [user["password"] for user in users]
+
+
+
+# credentials = {"usernames":{}}
+
+# for un, name, pw in zip(usernames, names, hashed_passwords):
+#     user_dict = {"name":name,"password":pw}
+#     credentials["usernames"].update({un:user_dict})
+
+
+
+# authenticator = stauth.Authenticate(credentials, "app_home", "auth", cookie_expiry_days=30)
+
+# name, authentication_status, username = authenticator.login("Login", "main")
+
+# if authentication_status:
+#     st.error("Username/password is correct")
+
+# if authentication_status == False:
+#     st.error("Username/password is incorrect")
+    
+# if authentication_status == None:
+#     st.warning("Please enter your username and password")    
+
+
+
+
+
+
+
+
+
+
+
+
+
+# authenticator = stauth.Authenticate(credentials,"sales_dashboard", "abcdef", cookie_expiry_days=30)
+
+# name, authentication_status, username = authenticator.login("Login", "main")
+
+# if authentication_status == False:
+#     st.error("Username/password is incorrect")
+
+# if authentication_status == None:
+#     st.warning("Please enter your username and password")
+
+# if authentication_status:
+#     st.write("you logged in")
+#     fname = st.text_area("", placeholder="Enter the first name of the student here ...")
+#     lname = st.text_area("", placeholder="Enter the last name of the student here ...")
 
 
 
