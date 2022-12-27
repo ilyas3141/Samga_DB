@@ -1,6 +1,7 @@
 import streamlit as st
 
 from deta import Deta
+from datetime import datetime
 import pandas as pd
 import streamlit_authenticator as stauth  # pip install streamlit-authenticator
 from streamlit_option_menu import option_menu
@@ -13,11 +14,13 @@ deta=Deta(DETA_KEY)
 
 db=deta.Base("clients")
 db1=deta.Base("admins")
+now = datetime.now()
+d1= now.strftime("%d/%m/%Y %H:%M:%S")
 
 def insert_period(names, l_name, emails,livcountry,livcity,fee,grade,enlang,gerlang,country):
     """Returns the report on a successful creation, otherwise raises an error"""
     return db.put({"First Name": names, "Last Name": l_name, "Email address": emails,"Country":livcountry,"City":livcity,"Fee":fee,"Average grade":grade,"Level of English":enlang,
-                   "Level of German":gerlang,"Prefered country of studies":country,"Application status":"No status yet"})
+                   "Level of German":gerlang,"Prefered country of studies":country,"Application status":"No status yet","Date of entry":d1})
 
 def fetch_all_users():
     """Returns a dict of all users"""
