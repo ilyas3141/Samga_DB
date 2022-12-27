@@ -3,7 +3,7 @@ import streamlit as st
 from deta import Deta
 import pandas as pd
 import streamlit_authenticator as stauth  # pip install streamlit-authenticator
-
+from streamlit_option_menu import option_menu
 
 
 DETA_KEY = st.secrets["DETA_KEY"]
@@ -12,40 +12,12 @@ deta=Deta(DETA_KEY)
 
 
 db=deta.Base("clients")
+db1=deta.Base("admins")
 
-name = st.text_area("", placeholder="Enter your first name here ...")
-last_name = st.text_area("", placeholder="Enter your last name here ...")
-email = st.text_area("", placeholder="Enter your email here ...")
-
-
-def insert_period(names, l_name, emails):
+def insert_period(names, l_name, emails,livcountry,livcity,fee,grade,enlang,gerlang,country):
     """Returns the report on a successful creation, otherwise raises an error"""
-    return db.put({"First Name": names, "Last Name": l_name, "Email address": emails})
-
-
-# def fetch_all_periods():
-#     """Returns a dict of all periods"""
-#     res = db.fetch()
-#     periods = [re for re in res]
-#     return periods
-
-
-# def get_period(period):
-#     """If not found, the function will return None"""
-#     return db.get(period)
-
-#insert_period("feb", 2000, 3000, "no")
-
-st.subheader('Result')
-if st.button('push'):
-    insert_period(name,last_name,email)
-    res = db.fetch()
-    all_items = res.items
-    df = pd.DataFrame(all_items)
-    st.write(df['First Name'][0])
-
-
-
+    return db.put({"First Name": names, "Last Name": l_name, "Email address": emails,"Country":livcountry,"City":livcity,"Fee":fee,"Average grade":grade,"Level of English":enlang,
+                   "Level of German":gerlang,"Prefered country of studies":country,"Application status":"No status yet"})
 
 def fetch_all_users():
     """Returns a dict of all users"""
@@ -54,8 +26,208 @@ def fetch_all_users():
 
 
 
+selected=option_menu(
+    menu_title="Main Menu",
+    options=["Leave a record and see a recommendation","Edit database"],
+    icons=["house","book"],
+    menu_icon="cast",
+    default_index=0,
+    orientation="horizontal"
+    )
 
-db1=deta.Base("admins")
+if selected=="Leave a record and see a recommendation":
+    name = st.text_area("", placeholder="Enter your first name here ...")
+    last_name = st.text_area("", placeholder="Enter your last name here ...")
+    email = st.text_area("", placeholder="Enter your email here ...")
+    livcountry = st.text_area("", placeholder="Enter the country you live in here ...")
+    livcity = st.text_area("", placeholder="Enter the city you live in here ...")
+    fee=st.selectbox('Fee',('Free of charge studies','Paid studies'))
+    grade=st.text_area("", placeholder="Enter your average school/university grade here...")
+    enlang=st.selectbox('Level of English',('A1(Elementary)','A2(Elementary)','B1(Intermediate)','B2(Intermediate)','C1(Advanced)','C2(Advanced)'))
+    gerlang=st.selectbox('Level of German',('A1(Lower Beginner)','A2(Upper Beginner)','B1(Lower Intermediate)','B2(Upper Intermediate)','C1(Lower Advanced)','C2(Upper Advanced/Fluent)','Goethe-Zertifikat','Goethe-Test PRO'))
+    country=st.selectbox('Country of studies',('Austria','Hungary'))
+
+    
+    
+    
+    #st.subheader('Result')
+    if st.button('Save'):
+        insert_period(name,last_name,email,livcountry,livcity,fee,grade,enlang,gerlang,country)
+        #res = db.fetch()
+        #all_items = res.items
+        #df = pd.DataFrame(all_items)
+        st.write('Thank you, your record is saved')
+
+
+
+if selected=="Edit database":
+    users=fetch_all_users()
+
+    usernames = [user["key"] for user in users]
+    names = [user["name"] for user in users]
+    hashed_passwords = [user["password"] for user in users]
+
+
+
+    credentials = {"usernames":{}}
+
+    for un, name, pw in zip(usernames, names, hashed_passwords):
+        user_dict = {"name":name,"password":pw}
+        credentials["usernames"].update({un:user_dict})
+
+
+
+    authenticator = stauth.Authenticate(credentials, "app_home", "auth", cookie_expiry_days=30)
+
+    name, authentication_status, username = authenticator.login("Login", "main")
+
+    if authentication_status:
+        #st.error("Username/password is correct")
+        st.header('Type data of the student')
+        authenticator.logout("Logout", "sidebar")
+        res = db.fetch()
+        all_items = res.items
+        df = pd.DataFrame(all_items)
+        
+        edname = st.text_area("", placeholder="Enter name of student ...")
+        edlname = st.text_area("", placeholder="Enter last name of student ...")
+        edemail=st.text_area("", placeholder="Enter email of student ...")
+        
+        #if st.button('Edit'):
+        if len(df[(df['First Name']==edname)&(df['Last Name']==edlname)])>0:
+            student_key=df[(df['First Name']==edname)&(df['Last Name']==edlname)&(df['Email address']==edemail)]['key'].tolist()[0]
+            change=st.selectbox('What do you want to edit?',('First Name','Last Name','Email address','Country','City','Fee','Average grade','Level of English','Level of German','Prefered country of studies','Application status'))
+            if change=='Application status':
+                
+                status=st.selectbox('Application status',('No status yet','Admitted','Failed'))
+                if st.button('Save'):
+                    updates = {
+                        "Application status":status
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')
+                
+            elif change=='First Name':
+                new_name=st.text_area("", placeholder="Change name of the student ...")
+                if st.button('Save'):
+                    updates = {
+                        "First Name":new_name
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')
+            
+            elif change=='Last Name':
+                newl_name=st.text_area("", placeholder="Change last name of the student ...")
+                if st.button('Save'):
+                    updates = {
+                        "Last Name":newl_name
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')    
+            
+            elif change=='Email address':
+                new_email=st.text_area("", placeholder="Change Email address of the student ...")
+                if st.button('Save'):
+                    updates = {
+                        "Email address":new_email
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')
+            
+            elif change=='Country':
+                new_country=st.text_area("", placeholder="Change country of the student ...")
+                if st.button('Save'):
+                    updates = {
+                        "Country":new_country
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')
+            
+            elif change=='City':
+                new_city=st.text_area("", placeholder="Change city of the student ...")
+                if st.button('Save'):
+                    updates = {
+                        "City":new_city
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')
+            
+            elif change=='Fee':
+                new_fee=st.selectbox('Fee',('Free of charge studies','Paid studies'))
+                if st.button('Save'):
+                    updates = {
+                        "Fee":new_fee
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')
+            
+            elif change=='Average grade':
+                new_grade=st.text_area("", placeholder="Change average grade of the student ...")
+                if st.button('Save'):
+                    updates = {
+                        "Average grade":new_grade
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')
+                    
+            elif change=='Level of English':
+                new_eng=st.selectbox('Level of English',('A1(Elementary)','A2(Elementary)','B1(Intermediate)','B2(Intermediate)','C1(Advanced)','C2(Advanced)'))
+                if st.button('Save'):
+                    updates = {
+                        "Level of English":new_eng
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')        
+                    
+            elif change=='Level of German':
+                new_ger=st.selectbox('Level of German',('A1(Lower Beginner)','A2(Upper Beginner)','B1(Lower Intermediate)','B2(Upper Intermediate)','C1(Lower Advanced)','C2(Upper Advanced/Fluent)','Goethe-Zertifikat','Goethe-Test PRO'))
+                if st.button('Save'):
+                    updates = {
+                        "Level of German":new_ger
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')       
+                    
+            elif change=='Prefered country of studies':
+                new_stcountry=st.selectbox('Country of studies',('Austria','Hungary'))
+                if st.button('Save'):
+                    updates = {
+                        "Prefered country of studies":new_stcountry
+                        }
+                    db.update(updates, student_key)
+                    st.write('Record was editted')        
+                    
+            
+                
+                    
+                
+        
+        else:
+            st.error("No such student or you put incorrect data")
+        
+        
+        
+   
+        
+        
+        
+        
+        
+        
+
+    if authentication_status == False:  
+        st.error("Username/password is incorrect")
+    
+    if authentication_status == None:
+        st.warning("Please enter your username and password")    
+
+    
+
+
+
+
+
+
 
 
 
