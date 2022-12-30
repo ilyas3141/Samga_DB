@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 import streamlit_authenticator as stauth  # pip install streamlit-authenticator
 from streamlit_option_menu import option_menu
+from io import BytesIO
 
 
 DETA_KEY = st.secrets["DETA_KEY"]
@@ -26,6 +27,19 @@ def fetch_all_users():
     """Returns a dict of all users"""
     res = db1.fetch()
     return res.items
+
+
+def to_excel(df):
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    df.to_excel(writer, index=False, sheet_name='Sheet1')
+    workbook = writer.book
+    worksheet = writer.sheets['Sheet1']
+    format1 = workbook.add_format({'num_format': '0.00'}) 
+    worksheet.set_column('A:A', None, format1)  
+    writer.save()
+    processed_data = output.getvalue()
+    return processed_data
 
 
 
@@ -91,6 +105,18 @@ if selected=="Edit database":
         res = db.fetch()
         all_items = res.items
         df = pd.DataFrame(all_items)
+        
+        csv=df.to_csv().encode('utf-8')
+        
+        df_xlsx = to_excel(df)
+        
+        st.dataframe(df)
+        st.download_button(
+            label="Download data as Excel",
+            data=df_xlsx,
+            file_name='database.xlsx'#,
+            #mime='text/csv',
+            )
         
         edname = st.text_area("", placeholder="Enter name of student ...")
         edlname = st.text_area("", placeholder="Enter last name of student ...")
