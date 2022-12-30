@@ -100,7 +100,7 @@ if selected=="Edit database":
 
     if authentication_status:
         #st.error("Username/password is correct")
-        st.header('Type data of the student')
+        
         authenticator.logout("Logout", "sidebar")
         res = db.fetch()
         all_items = res.items
@@ -117,6 +117,7 @@ if selected=="Edit database":
             file_name='database.xlsx'#,
             #mime='text/csv',
             )
+        st.header('Type data of the student')
         
         edname = st.text_area("", placeholder="Enter name of student ...")
         edlname = st.text_area("", placeholder="Enter last name of student ...")
