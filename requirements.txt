@@ -5,4 +5,4 @@ pandas==1.0.5
 numpy==1.23.4
 streamlit_authenticator==0.2.1
 streamlit_option_menu==0.3.2
-XlsWriter==1.2.9
+XlsxWriter==1.2.9
