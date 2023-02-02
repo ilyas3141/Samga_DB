@@ -19,9 +19,9 @@ db1=deta.Base("admins")
 now = datetime.now()
 d1= now.strftime("%d/%m/%Y %H:%M:%S")
 
-def insert_period(names, l_name, emails,livcountry,livcity,fee,grade,enlang,gerlang,country):
+def insert_period(names, l_name, emails,livcountry,livcity,fee,deg,grade,enlang,gerlang,country):
     """Returns the report on a successful creation, otherwise raises an error"""
-    return db.put({"First Name": names, "Last Name": l_name, "Email address": emails,"Country":livcountry,"City":livcity,"Fee":fee,"Average grade":grade,"Level of English":enlang,
+    return db.put({"First Name": names, "Last Name": l_name, "Email address": emails,"Country":livcountry,"City":livcity,"Fee":fee,"Degree":deg,"Average grade":grade,"Level of English":enlang,
                    "Level of German":gerlang,"Prefered country of studies":country,"University applied to":"No university listed","University admitted to":"No university listed","Application status":"No status yet","Date of entry":d1})
 
 def fetch_all_users():
@@ -61,6 +61,7 @@ if selected=="Ввести данные и посмотреть вероятно
     livcountry = st.text_area("", placeholder="Страна проживания ...")
     livcity = st.text_area("", placeholder="Город проживания ...")
     fee=st.selectbox('Желаемая форма обучения',('Бесплатная(стипендия)','Платная'))
+    deg=st.selectbox('Предпочтительный уровень образования',('Бакалавриат','Магистратура'))
     
     grade = st.number_input("Ваш средний балл в школе/университете...")
     #grade=st.text_area("", placeholder="Enter your average school/university grade here...")
@@ -80,12 +81,12 @@ if selected=="Ввести данные и посмотреть вероятно
     
     #st.subheader('Result')
     if st.button('Сохранить'):
-        insert_period(name,last_name,email,livcountry,livcity,fee,grade,enlang,gerlang,country)
+        insert_period(name,last_name,email,livcountry,livcity,fee,deg,grade,enlang,gerlang,country)
         #res = db.fetch()
         #all_items = res.items
         #df = pd.DataFrame(all_items)
         st.write('Спасибо, ваша информация записана!')
-        st.write('Процент вашего успешного поступления:')
+        st.write('Вероятность вашего успешного поступления на основе введенных показателей:')
         if (country=='Венгрия'):
             if (enlang=='A1'):
                 if (grade>=3.0)&(grade<3.5):
@@ -178,77 +179,152 @@ if selected=="Ввести данные и посмотреть вероятно
                 elif (grade>=4.5)&(grade<=5.0):
                     st.write('100%')       
                     st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
-        elif (country=='Австрия'):  
-            if (gerlang=='A1'):
-                if bur=='Плохое':
-                    st.write('25%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 58% !')
-                elif bur=='Хорошее':
-                    st.write('45%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 78% !')
-                elif bur=='Отличное':
-                    st.write('60%')  
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 80% !')
-            elif (gerlang=='A2'):
-                if bur=='Плохое':
-                    st.write('30%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 63% !')
-                elif bur=='Хорошее':
-                    st.write('50%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 83% !')
-                elif bur=='Отличное':
-                    st.write('65%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 85% !')
-            elif (gerlang=='Никакой'):
-                if bur=='Плохое':
-                    st.write('15%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 55% !')
-                elif bur=='Хорошее':
-                    st.write('35%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 68% !')
-                elif bur=='Отличное':
-                    st.write('50%')  
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 70% !')
-            elif (gerlang=='B1'):
-                if bur=='Плохое':
-                    st.write('40%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 73% !')
-                elif bur=='Хорошее':
-                    st.write('60%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 80% !')
-                elif bur=='Отличное':
-                    st.write('75%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
-            elif (gerlang=='B2'):
-                if bur=='Плохое':
-                    st.write('50%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 70% !')
-                elif bur=='Хорошее':
-                    st.write('70%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
-                elif bur=='Отличное':
-                    st.write('85%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
-            elif (gerlang=='C1'):
-                if bur=='Плохое':
-                    st.write('55%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 75% !')
-                elif bur=='Хорошее':
-                    st.write('75%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
-                elif bur=='Отличное':
-                    st.write('90%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
-            elif (gerlang=='C2'):
-                if bur=='Плохое':
-                    st.write('65%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 85% !')
-                elif bur=='Хорошее':
-                    st.write('85%')
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
-                elif bur=='Отличное':
-                    st.write('100%') 
-                    st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+        elif (country=='Австрия'):
+            if deg=='Бакалавриат':
+                if (gerlang=='A1'):
+                    if bur=='Плохое':
+                        st.write('25%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 58% !')
+                    elif bur=='Хорошее':
+                        st.write('45%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 78% !')
+                    elif bur=='Отличное':
+                        st.write('60%')  
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 80% !')
+                elif (gerlang=='A2'):
+                    if bur=='Плохое':
+                        st.write('30%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 63% !')
+                    elif bur=='Хорошее':
+                        st.write('50%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 83% !')
+                    elif bur=='Отличное':
+                        st.write('65%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 85% !')
+                elif (gerlang=='Никакой'):
+                    if bur=='Плохое':
+                        st.write('15%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 55% !')
+                    elif bur=='Хорошее':
+                        st.write('35%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 68% !')
+                    elif bur=='Отличное':
+                        st.write('50%')  
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 70% !')
+                elif (gerlang=='B1'):
+                    if bur=='Плохое':
+                        st.write('40%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 73% !')
+                    elif bur=='Хорошее':
+                        st.write('60%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 80% !')
+                    elif bur=='Отличное':
+                        st.write('75%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
+                elif (gerlang=='B2'):
+                    if bur=='Плохое':
+                        st.write('50%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 70% !')
+                    elif bur=='Хорошее':
+                        st.write('70%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
+                    elif bur=='Отличное':
+                        st.write('85%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+                elif (gerlang=='C1'):
+                    if bur=='Плохое':
+                        st.write('55%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 75% !')
+                    elif bur=='Хорошее':
+                        st.write('75%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
+                    elif bur=='Отличное':
+                        st.write('90%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+                elif (gerlang=='C2'):
+                    if bur=='Плохое':
+                        st.write('65%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 85% !')
+                    elif bur=='Хорошее':
+                        st.write('85%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+                    elif bur=='Отличное':
+                        st.write('100%') 
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+            else:
+                if (enlang=='A1'):
+                    if bur=='Плохое':
+                        st.write('25%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 58% !')
+                    elif bur=='Хорошее':
+                        st.write('45%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 78% !')
+                    elif bur=='Отличное':
+                        st.write('60%')  
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 80% !')
+                elif (enlang=='A2'):
+                    if bur=='Плохое':
+                        st.write('30%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 63% !')
+                    elif bur=='Хорошее':
+                        st.write('50%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 83% !')
+                    elif bur=='Отличное':
+                        st.write('65%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 85% !')
+                elif (enlang=='Никакой'):
+                    if bur=='Плохое':
+                        st.write('15%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 55% !')
+                    elif bur=='Хорошее':
+                        st.write('35%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 68% !')
+                    elif bur=='Отличное':
+                        st.write('50%')  
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 70% !')
+                elif (enlang=='B1'):
+                    if bur=='Плохое':
+                        st.write('40%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 73% !')
+                    elif bur=='Хорошее':
+                        st.write('60%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 80% !')
+                    elif bur=='Отличное':
+                        st.write('75%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
+                elif (enlang=='B2'):
+                    if bur=='Плохое':
+                        st.write('50%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 70% !')
+                    elif bur=='Хорошее':
+                        st.write('70%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
+                    elif bur=='Отличное':
+                        st.write('85%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+                elif (enlang=='C1'):
+                    if bur=='Плохое':
+                        st.write('55%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 75% !')
+                    elif bur=='Хорошее':
+                        st.write('75%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 90% !')
+                    elif bur=='Отличное':
+                        st.write('90%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+                elif (enlang=='C2'):
+                    if bur=='Плохое':
+                        st.write('65%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 85% !')
+                    elif bur=='Хорошее':
+                        st.write('85%')
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+                    elif bur=='Отличное':
+                        st.write('100%') 
+                        st.write('С помощью Samga Abroad вы поднимите вероятность поступления до 100% !')
+                
+        st.write('Данная оценка вероятности является приблизительной, так как условия поступления в университеты на разные специальности могут радикально отличаться. Мы советуем выйти на связь с нашими экспертами для более точного персонального анализа вашей ситуации')        
+            
 
 
 
@@ -333,7 +409,7 @@ if selected=="База данных(для админов)":
         #if st.button('Edit'):
         if len(df[(df['First Name']==edname)&(df['Last Name']==edlname)])>0:
             student_key=df[(df['First Name']==edname)&(df['Last Name']==edlname)&(df['Email address']==edemail)]['key'].tolist()[0]
-            change=st.selectbox('Что вы хотите изменить?',('Имя','Фамилия','Email','Страна','Город','Желаемая форма обучения','Средний балл','Уровень английского','Уровень немецкого','Страна обучения','Выбранный университет','Университет поступления','Статус поступления'))
+            change=st.selectbox('Что вы хотите изменить?',('Имя','Фамилия','Email','Страна','Город','Желаемая форма обучения','Средний балл','Уровень английского','Уровень немецкого','Страна обучения','Выбранный университет','Университет поступления','Статус поступления','Удалить студента из базы'))
             if change=='Статус поступления':
                 
                 status=st.selectbox('Статус поступления',('Нет статуса','Поступил/а','Не поступил/а'))
@@ -450,7 +526,9 @@ if selected=="База данных(для админов)":
                     db.update(updates, student_key)
                     st.write('Запись сохранена')        
                     
-            
+            elif change=='Удалить студента из базы':
+                if st.button('Удалить'):
+                    db.delete(student_key) 
                 
                     
                 
