@@ -356,6 +356,7 @@ if selected=="База данных(для админов)":
         res = db.fetch()
         all_items = res.items
         df = pd.DataFrame(all_items)
+        df=df.drop_duplicates(subset=['Email address'])
         df['Date of entry']=pd.to_datetime(df['Date of entry'], format="%d/%m/%Y %H:%M:%S")
         df=df.sort_values(by='Date of entry',ascending=False)
         
