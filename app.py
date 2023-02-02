@@ -529,6 +529,7 @@ if selected=="База данных(для админов)":
             elif change=='Удалить студента из базы':
                 if st.button('Удалить'):
                     db.delete(student_key) 
+                    st.write('Запись удалена')
                 
                     
                 
