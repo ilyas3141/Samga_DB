@@ -81,7 +81,7 @@ if selected=="Ввести данные и посмотреть вероятно
     
     #st.subheader('Result')
     if st.button('Сохранить'):
-        insert_period(name,last_name,email,livcountry.lower(),livcity.lower(),fee,deg,grade,enlang,gerlang,country)
+        insert_period(name.lower(),last_name.lower(),email,livcountry.lower(),livcity.lower(),fee,deg,grade,enlang,gerlang,country)
         #res = db.fetch()
         #all_items = res.items
         #df = pd.DataFrame(all_items)
