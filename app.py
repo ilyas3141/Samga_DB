@@ -422,18 +422,18 @@ if selected=="База данных(для админов)":
                     db.update(updates, student_key)
                     st.write('Запись сохранена')
             elif change=='Выбранный университет':
-                newl_name=st.text_area("", placeholder="Измените выбранный университет ...")
+                new_aduni=st.text_area("", placeholder="Измените выбранный университет ...")
                 if st.button('Сохранить'):
                     updates = {
-                        "University applied to":newl_name
+                        "University applied to":new_aduni.lower()
                         }
                     db.update(updates, student_key)
                     st.write('Запись сохранена')     
             elif change=='Университет поступления':
-                newl_name=st.text_area("", placeholder="Измените университет поступления...")
+                new_uni=st.text_area("", placeholder="Измените университет поступления...")
                 if st.button('Сохранить'):
                     updates = {
-                        "University admitted to":newl_name
+                        "University admitted to":new_uni.lower()
                         }
                     db.update(updates, student_key)
                     st.write('Запись сохранена')         
@@ -442,7 +442,7 @@ if selected=="База данных(для админов)":
                 new_name=st.text_area("", placeholder="Измените имя ...")
                 if st.button('Сохранить'):
                     updates = {
-                        "First Name":new_name
+                        "First Name":new_name.lower()
                         }
                     db.update(updates, student_key)
                     st.write('Запись сохранена')
@@ -451,7 +451,7 @@ if selected=="База данных(для админов)":
                 newl_name=st.text_area("", placeholder="Измените фамилию ...")
                 if st.button('Сохранить'):
                     updates = {
-                        "Last Name":newl_name
+                        "Last Name":newl_name.lower()
                         }
                     db.update(updates, student_key)
                     st.write('Запись сохранена')    
@@ -460,7 +460,7 @@ if selected=="База данных(для админов)":
                 new_email=st.text_area("", placeholder="Измените email ...")
                 if st.button('Сохранить'):
                     updates = {
-                        "Email address":new_email
+                        "Email address":new_email.lower()
                         }
                     db.update(updates, student_key)
                     st.write('Запись сохранена')
@@ -469,7 +469,7 @@ if selected=="База данных(для админов)":
                 new_country=st.text_area("", placeholder="Введите страну ...")
                 if st.button('Сохранить'):
                     updates = {
-                        "Country":new_country
+                        "Country":new_country.lower()
                         }
                     db.update(updates, student_key)
                     st.write('Запись сохранена')
@@ -478,7 +478,7 @@ if selected=="База данных(для админов)":
                 new_city=st.text_area("", placeholder="Введите город ...")
                 if st.button('Сохранить'):
                     updates = {
-                        "City":new_city
+                        "City":new_city.lower()
                         }
                     db.update(updates, student_key)
                     st.write('Запись сохранена')
