@@ -81,7 +81,7 @@ if selected=="Ввести данные и посмотреть вероятно
     
     #st.subheader('Result')
     if st.button('Сохранить'):
-        insert_period(name,last_name,email,livcountry,livcity,fee,deg,grade,enlang,gerlang,country)
+        insert_period(name,last_name,email,livcountry.lower(),livcity.lower(),fee,deg,grade,enlang,gerlang,country)
         #res = db.fetch()
         #all_items = res.items
         #df = pd.DataFrame(all_items)
@@ -401,7 +401,7 @@ if selected=="База данных(для админов)":
         ement = st.text_area("", placeholder="Введите имя и фамилию студента для просмотра ...")
         #ement1 = st.text_area("", placeholder="Enter last name of student you want to look at ...")
         if st.button('Показать'):
-            st.dataframe(df[((df['First Name']==ement.split()[0])|(df['First Name']==ement.split()[1]))&((df['Last Name']==ement.split()[1])|(df['Last Name']==ement.split()[0]))])
+            st.dataframe(df[(((df['First Name']==ement.split()[0].lower())|(df['First Name']==ement.split()[0]))|((df['First Name']==ement.split()[1].lower())|(df['First Name']==ement.split()[1])))&(((df['Last Name']==ement.split()[0].lower())|(df['Last Name']==ement.split()[0]))|((df['Last Name']==ement.split()[1].lower())|(df['Last Name']==ement.split()[1])))])
         st.write('Введите email студента чьи данные вы хотите поменять:')
         # edname = st.text_area("", placeholder="Введите имя ...")
         # edlname = st.text_area("", placeholder="Введите фамилию ...")
