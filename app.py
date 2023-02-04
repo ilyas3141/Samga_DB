@@ -408,7 +408,8 @@ if selected=="База данных(для админов)":
         edemail=st.text_area("", placeholder="Введите email ...")
         
         #if st.button('Edit'):
-        if len(df[((df['First Name']==ement.split()[0])|(df['First Name']==ement.split()[1]))&((df['Last Name']==ement.split()[1])|(df['Last Name']==ement.split()[0]))])>0:
+        #if len(df[((df['First Name']==ement.split()[0])|(df['First Name']==ement.split()[1]))&((df['Last Name']==ement.split()[1])|(df['Last Name']==ement.split()[0]))])>0:
+        if len(df[df['Email address']==edemail])>0:
             student_key=df[(df['Email address']==edemail)]['key'].tolist()[0]
             change=st.selectbox('Что вы хотите изменить?',('Имя','Фамилия','Email','Страна','Город','Желаемая форма обучения','Средний балл','Уровень английского','Уровень немецкого','Страна обучения','Выбранный университет','Университет поступления','Статус поступления','Удалить студента из базы'))
             if change=='Статус поступления':
