@@ -46,8 +46,8 @@ def to_excel(df):
 
 selected=option_menu(
     menu_title="Главное Меню",
-    options=["Ввести данные и посмотреть вероятность поступления","База данных(для админов)"],
-    icons=["house","book"],
+    options=["Ввести данные и посмотреть вероятность поступления"],
+    icons=["house"],
     menu_icon="cast",
     default_index=0,
     orientation="horizontal"
@@ -328,216 +328,216 @@ if selected=="Ввести данные и посмотреть вероятно
 
 
 
-if selected=="База данных(для админов)":
-    users=fetch_all_users()
+# if selected=="База данных(для админов)":
+#     users=fetch_all_users()
 
-    usernames = [user["key"] for user in users]
-    names = [user["name"] for user in users]
-    hashed_passwords = [user["password"] for user in users]
-
-
-
-    credentials = {"usernames":{}}
-
-    for un, name, pw in zip(usernames, names, hashed_passwords):
-        user_dict = {"name":name,"password":pw}
-        credentials["usernames"].update({un:user_dict})
+#     usernames = [user["key"] for user in users]
+#     names = [user["name"] for user in users]
+#     hashed_passwords = [user["password"] for user in users]
 
 
 
-    authenticator = stauth.Authenticate(credentials, "app_home", "auth", cookie_expiry_days=30)
+#     credentials = {"usernames":{}}
 
-    name, authentication_status, username = authenticator.login("Login", "main")
+#     for un, name, pw in zip(usernames, names, hashed_passwords):
+#         user_dict = {"name":name,"password":pw}
+#         credentials["usernames"].update({un:user_dict})
 
-    if authentication_status:
-        #st.error("Username/password is correct")
+
+
+#     authenticator = stauth.Authenticate(credentials, "app_home", "auth", cookie_expiry_days=30)
+
+#     name, authentication_status, username = authenticator.login("Login", "main")
+
+#     if authentication_status:
+#         #st.error("Username/password is correct")
         
-        authenticator.logout("Logout", "sidebar")
-        res = db.fetch()
-        all_items = res.items
-        df = pd.DataFrame(all_items)
-        df=df.drop_duplicates(subset=['Email address'])
-        df['Date of entry']=pd.to_datetime(df['Date of entry'], format="%d/%m/%Y %H:%M:%S")
-        df=df.sort_values(by='Date of entry',ascending=False)
+#         authenticator.logout("Logout", "sidebar")
+#         res = db.fetch()
+#         all_items = res.items
+#         df = pd.DataFrame(all_items)
+#         df=df.drop_duplicates(subset=['Email address'])
+#         df['Date of entry']=pd.to_datetime(df['Date of entry'], format="%d/%m/%Y %H:%M:%S")
+#         df=df.sort_values(by='Date of entry',ascending=False)
         
-        csv=df.to_csv().encode('utf-8')
+#         csv=df.to_csv().encode('utf-8')
         
-        df_xlsx = to_excel(df)
+#         df_xlsx = to_excel(df)
         
-        st.dataframe(df)
-        st.download_button(
-            label="Скачать базу в формате Excel",
-            data=df_xlsx,
-            file_name='database.xlsx'#,
-            #mime='text/csv',
-            )
-        check=st.checkbox('Анализ')
-        if check:
-            df['count']=1
-            fig=px.pie(df,names='Prefered country of studies',values='count')
-            st.header('Страна обучения')
-            st.write(fig)
+#         st.dataframe(df)
+#         st.download_button(
+#             label="Скачать базу в формате Excel",
+#             data=df_xlsx,
+#             file_name='database.xlsx'#,
+#             #mime='text/csv',
+#             )
+#         check=st.checkbox('Анализ')
+#         if check:
+#             df['count']=1
+#             fig=px.pie(df,names='Prefered country of studies',values='count')
+#             st.header('Страна обучения')
+#             st.write(fig)
             
-            st.header('Страна проживания')
-            fig1=px.pie(df,names='Country',values='count',color_discrete_sequence=px.colors.sequential.Viridis)
-            st.write(fig1)
+#             st.header('Страна проживания')
+#             fig1=px.pie(df,names='Country',values='count',color_discrete_sequence=px.colors.sequential.Viridis)
+#             st.write(fig1)
             
-            fig=px.pie(df,names='Fee',values='count',color_discrete_sequence=px.colors.sequential.Plasma)
-            st.header('Выбранная форма обучения')
-            st.write(fig)   
+#             fig=px.pie(df,names='Fee',values='count',color_discrete_sequence=px.colors.sequential.Plasma)
+#             st.header('Выбранная форма обучения')
+#             st.write(fig)   
             
-            fig=px.pie(df,names='Application status',values='count',color_discrete_sequence=px.colors.sequential.Cividis)
-            st.header('Статус поступления')
-            st.write(fig) 
+#             fig=px.pie(df,names='Application status',values='count',color_discrete_sequence=px.colors.sequential.Cividis)
+#             st.header('Статус поступления')
+#             st.write(fig) 
             
-            df1=df
-            df1['Date of entry']=pd.to_datetime(df1['Date of entry'], format="%d/%m/%Y").dt.date
-            fig = px.line(df1.groupby(by='Date of entry').sum())
-            st.header('Количество записей в день')
-            st.write(fig)
+#             df1=df
+#             df1['Date of entry']=pd.to_datetime(df1['Date of entry'], format="%d/%m/%Y").dt.date
+#             fig = px.line(df1.groupby(by='Date of entry').sum())
+#             st.header('Количество записей в день')
+#             st.write(fig)
         
         
-        st.write('Найти студента в базе:')
-        ement = st.text_area("", placeholder="Введите имя и фамилию студента для просмотра ...")
-        #ement1 = st.text_area("", placeholder="Enter last name of student you want to look at ...")
-        if st.button('Показать'):
-            st.dataframe(df[(((df['First Name']==ement.split()[0].lower())|(df['First Name']==ement.split()[0]))|((df['First Name']==ement.split()[1].lower())|(df['First Name']==ement.split()[1])))&(((df['Last Name']==ement.split()[0].lower())|(df['Last Name']==ement.split()[0]))|((df['Last Name']==ement.split()[1].lower())|(df['Last Name']==ement.split()[1])))])
-        st.write('Введите email студента чьи данные вы хотите поменять:')
-        # edname = st.text_area("", placeholder="Введите имя ...")
-        # edlname = st.text_area("", placeholder="Введите фамилию ...")
-        edemail=st.text_area("", placeholder="Введите email ...")
+#         st.write('Найти студента в базе:')
+#         ement = st.text_area("", placeholder="Введите имя и фамилию студента для просмотра ...")
+#         #ement1 = st.text_area("", placeholder="Enter last name of student you want to look at ...")
+#         if st.button('Показать'):
+#             st.dataframe(df[(((df['First Name']==ement.split()[0].lower())|(df['First Name']==ement.split()[0]))|((df['First Name']==ement.split()[1].lower())|(df['First Name']==ement.split()[1])))&(((df['Last Name']==ement.split()[0].lower())|(df['Last Name']==ement.split()[0]))|((df['Last Name']==ement.split()[1].lower())|(df['Last Name']==ement.split()[1])))])
+#         st.write('Введите email студента чьи данные вы хотите поменять:')
+#         # edname = st.text_area("", placeholder="Введите имя ...")
+#         # edlname = st.text_area("", placeholder="Введите фамилию ...")
+#         edemail=st.text_area("", placeholder="Введите email ...")
         
-        #if st.button('Edit'):
-        #if len(df[((df['First Name']==ement.split()[0])|(df['First Name']==ement.split()[1]))&((df['Last Name']==ement.split()[1])|(df['Last Name']==ement.split()[0]))])>0:
-        if len(df[df['Email address']==edemail])>0:
-            student_key=df[(df['Email address']==edemail)]['key'].tolist()[0]
-            change=st.selectbox('Что вы хотите изменить?',('Имя','Фамилия','Email','Страна','Город','Желаемая форма обучения','Средний балл','Уровень английского','Уровень немецкого','Страна обучения','Выбранный университет','Университет поступления','Статус поступления','Удалить студента из базы'))
-            if change=='Статус поступления':
+#         #if st.button('Edit'):
+#         #if len(df[((df['First Name']==ement.split()[0])|(df['First Name']==ement.split()[1]))&((df['Last Name']==ement.split()[1])|(df['Last Name']==ement.split()[0]))])>0:
+#         if len(df[df['Email address']==edemail])>0:
+#             student_key=df[(df['Email address']==edemail)]['key'].tolist()[0]
+#             change=st.selectbox('Что вы хотите изменить?',('Имя','Фамилия','Email','Страна','Город','Желаемая форма обучения','Средний балл','Уровень английского','Уровень немецкого','Страна обучения','Выбранный университет','Университет поступления','Статус поступления','Удалить студента из базы'))
+#             if change=='Статус поступления':
                 
-                status=st.selectbox('Статус поступления',('Нет статуса','Поступил/а','Не поступил/а'))
-                if st.button('Сохранить'):
-                    updates = {
-                        "Application status":status
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')
-            elif change=='Выбранный университет':
-                new_aduni=st.text_area("", placeholder="Измените выбранный университет ...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "University applied to":new_aduni.lower()
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')     
-            elif change=='Университет поступления':
-                new_uni=st.text_area("", placeholder="Измените университет поступления...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "University admitted to":new_uni.lower()
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')         
+#                 status=st.selectbox('Статус поступления',('Нет статуса','Поступил/а','Не поступил/а'))
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Application status":status
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')
+#             elif change=='Выбранный университет':
+#                 new_aduni=st.text_area("", placeholder="Измените выбранный университет ...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "University applied to":new_aduni.lower()
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')     
+#             elif change=='Университет поступления':
+#                 new_uni=st.text_area("", placeholder="Измените университет поступления...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "University admitted to":new_uni.lower()
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')         
                 
-            elif change=='Имя':
-                new_name=st.text_area("", placeholder="Измените имя ...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "First Name":new_name.lower()
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')
+#             elif change=='Имя':
+#                 new_name=st.text_area("", placeholder="Измените имя ...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "First Name":new_name.lower()
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')
             
-            elif change=='Фамилия':
-                newl_name=st.text_area("", placeholder="Измените фамилию ...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "Last Name":newl_name.lower()
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')    
+#             elif change=='Фамилия':
+#                 newl_name=st.text_area("", placeholder="Измените фамилию ...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Last Name":newl_name.lower()
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')    
             
-            elif change=='Email':
-                new_email=st.text_area("", placeholder="Измените email ...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "Email address":new_email.lower()
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')
+#             elif change=='Email':
+#                 new_email=st.text_area("", placeholder="Измените email ...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Email address":new_email.lower()
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')
             
-            elif change=='Страна':
-                new_country=st.text_area("", placeholder="Введите страну ...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "Country":new_country.lower()
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')
+#             elif change=='Страна':
+#                 new_country=st.text_area("", placeholder="Введите страну ...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Country":new_country.lower()
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')
             
-            elif change=='Город':
-                new_city=st.text_area("", placeholder="Введите город ...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "City":new_city.lower()
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')
+#             elif change=='Город':
+#                 new_city=st.text_area("", placeholder="Введите город ...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "City":new_city.lower()
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')
             
-            elif change=='Форма обучения':
-                new_fee=st.selectbox('Форма обучения',('Бесплатная(стипендия)','Платная'))
-                if st.button('Сохранить'):
-                    updates = {
-                        "Fee":new_fee
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')
+#             elif change=='Форма обучения':
+#                 new_fee=st.selectbox('Форма обучения',('Бесплатная(стипендия)','Платная'))
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Fee":new_fee
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')
             
-            elif change=='Средний балл':
-                new_grade=st.number_input("Введите новый средний балл...")
-                if st.button('Сохранить'):
-                    updates = {
-                        "Average grade":new_grade
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')
+#             elif change=='Средний балл':
+#                 new_grade=st.number_input("Введите новый средний балл...")
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Average grade":new_grade
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')
                     
-            elif change=='Уровень английского':
-                new_eng=st.selectbox('Уровень английского',('A1','A2','B1','B2','C1','C2'))
-                if st.button('Сохранить'):
-                    updates = {
-                        "Level of English":new_eng
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')        
+#             elif change=='Уровень английского':
+#                 new_eng=st.selectbox('Уровень английского',('A1','A2','B1','B2','C1','C2'))
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Level of English":new_eng
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')        
                     
-            elif change=='Уровень немецкого':
-                new_ger=st.selectbox('Уровень немецкого',('A1','A2','B1','B2','C1','C2'))
-                if st.button('Сохранить'):
-                    updates = {
-                        "Level of German":new_ger
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')       
+#             elif change=='Уровень немецкого':
+#                 new_ger=st.selectbox('Уровень немецкого',('A1','A2','B1','B2','C1','C2'))
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Level of German":new_ger
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')       
                     
-            elif change=='Страна обучения':
-                new_stcountry=st.selectbox('Страна обучения',('Венгрия','Австрия'))
-                if st.button('Сохранить'):
-                    updates = {
-                        "Prefered country of studies":new_stcountry
-                        }
-                    db.update(updates, student_key)
-                    st.write('Запись сохранена')        
+#             elif change=='Страна обучения':
+#                 new_stcountry=st.selectbox('Страна обучения',('Венгрия','Австрия'))
+#                 if st.button('Сохранить'):
+#                     updates = {
+#                         "Prefered country of studies":new_stcountry
+#                         }
+#                     db.update(updates, student_key)
+#                     st.write('Запись сохранена')        
                     
-            elif change=='Удалить студента из базы':
-                if st.button('Удалить'):
-                    db.delete(student_key) 
-                    st.write('Запись удалена')
+#             elif change=='Удалить студента из базы':
+#                 if st.button('Удалить'):
+#                     db.delete(student_key) 
+#                     st.write('Запись удалена')
                 
                     
                 
         
-        else:
-            st.error("Студента с такими данными не существует в базе, проверьте введенную информацию")
+#         else:
+#             st.error("Студента с такими данными не существует в базе, проверьте введенную информацию")
         
         
         
@@ -549,11 +549,11 @@ if selected=="База данных(для админов)":
         
         
 
-    if authentication_status == False:  
-        st.error("Username/password is incorrect")
+#     if authentication_status == False:  
+#         st.error("Username/password is incorrect")
     
-    if authentication_status == None:
-        st.warning("Please enter your username and password")    
+#     if authentication_status == None:
+#         st.warning("Please enter your username and password")    
 
     
 
