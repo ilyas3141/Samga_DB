@@ -3,10 +3,10 @@ import streamlit as st
 from deta import Deta
 from datetime import datetime
 import pandas as pd
-import streamlit_authenticator as stauth  # pip install streamlit-authenticator
+ # pip install streamlit-authenticator
 from streamlit_option_menu import option_menu
 from io import BytesIO
-import plotly.express as px
+
 
 
 DETA_KEY = st.secrets["DETA_KEY"]
@@ -14,7 +14,7 @@ DETA_KEY = st.secrets["DETA_KEY"]
 deta=Deta(DETA_KEY)
 
 
-db=deta.Base("clients")
+db=deta.Base("Samga_DB")
 db1=deta.Base("admins")
 now = datetime.now()
 d1= now.strftime("%d/%m/%Y %H:%M:%S")
